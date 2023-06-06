@@ -9,7 +9,7 @@ resource "aws_security_group" "this" {
   vpc_id      = data.aws_subnet.this[0].vpc_id
 }
 
-resource "aws_security_group_rule" "msk-plain" {
+resource "aws_security_group_rule" "msk_plain" {
   count             = var.create ? 1 : 0
   from_port         = 9092
   to_port           = 9092
@@ -19,7 +19,7 @@ resource "aws_security_group_rule" "msk-plain" {
   self              = true
 }
 
-resource "aws_security_group_rule" "msk-tls" {
+resource "aws_security_group_rule" "msk_tls" {
   count             = var.create ? 1 : 0
   from_port         = 9094
   to_port           = 9094
@@ -29,7 +29,7 @@ resource "aws_security_group_rule" "msk-tls" {
   self              = true
 }
 
-resource "aws_security_group_rule" "zookeeper-plain" {
+resource "aws_security_group_rule" "zookeeper_plain" {
   count             = var.create ? 1 : 0
   from_port         = 2181
   to_port           = 2181
@@ -39,7 +39,7 @@ resource "aws_security_group_rule" "zookeeper-plain" {
   self              = true
 }
 
-resource "aws_security_group_rule" "zookeeper-tls" {
+resource "aws_security_group_rule" "zookeeper_tls" {
   count             = var.create ? 1 : 0
   from_port         = 2182
   to_port           = 2182
@@ -49,7 +49,7 @@ resource "aws_security_group_rule" "zookeeper-tls" {
   self              = true
 }
 
-resource "aws_security_group_rule" "jmx-exporter" {
+resource "aws_security_group_rule" "jmx_exporter" {
   count = var.create && var.open_monitoring_config.jmx_exporter_enabled_in_broker ? 1 : 0
 
   from_port         = 11001
