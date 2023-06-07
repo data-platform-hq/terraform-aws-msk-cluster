@@ -1,11 +1,8 @@
 locals {
-  validate_kafka_version          = var.cluster_type == "provisioned" && var.kafka_version == "" ? tobool("kafka_version shouldn't be empty if cluster_type is provisioned") : true
-  validate_number_of_broker_nodes = var.cluster_type == "provisioned" && var.number_of_broker_nodes == null ? tobool("number_of_broker_nodes shouldn't be empty if cluster_type is provisioned") : true
-  validate_instance_type          = var.cluster_type == "provisioned" && var.instance_type == "" ? tobool("instance_type shouldn't be empty if cluster_type is provisioned") : true
-
   client_authentication_enabled = var.client_authentication_sasl_enabled || var.client_authentication_tls_enabled || var.client_authentication_unauthenticated_enabled ? true : false
   server_properties             = join("\n", [for k, v in var.mks_configuration_server_properties : format("%s = %s", k, v)])
 }
+
 ################################################################################
 # Provisioned MSK cluster
 ################################################################################
@@ -128,6 +125,20 @@ resource "aws_msk_cluster" "this" {
           }
         }
       }
+    }
+  }
+  lifecycle {
+    precondition {
+      condition     = var.kafka_version != ""
+      error_message = "kafka_version shouldn't be empty if cluster_type is provisioned"
+    }
+    precondition {
+      condition     = var.number_of_broker_nodes != null
+      error_message = "number_of_broker_nodes shouldn't be empty if cluster_type is provisioned"
+    }
+    precondition {
+      condition     = var.instance_type != ""
+      error_message = "instance_type shouldn't be empty if cluster_type is provisioned"
     }
   }
 }
